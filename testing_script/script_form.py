@@ -1,15 +1,16 @@
+import os
+import sys
+import os.path 
+import random
+import time
+
+from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-import time
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import random
-import os
 from pynput.keyboard import Key, Controller
-import sys
-import os.path 
 
 pathToDriver = r"C:\Users\rmiciun\chromedriver-win64-122\chromedriver.exe"
 if(os.path.exists(pathToDriver)):
