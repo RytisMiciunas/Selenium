@@ -4,7 +4,9 @@ import os.path
 import random
 import time
 import variables as vf
+import names
 
+from phone_gen import PhoneNumber
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -20,6 +22,7 @@ def onStartSettingUpChrome():
     actions = ActionChains(driver)
     wait = WebDriverWait(driver, timeout=30)
     driver.implicitly_wait(3)
+    return path, driver, actions, wait
 
 def checkAndOpenDriver(path):
     pathToDriver = path +r"\chromedriver.exe"
@@ -32,10 +35,11 @@ def checkAndOpenDriver(path):
     return driver
 
 def getInformationLine():
-    with open(path + r"\info.txt") as file:
-        allLines = file.read().splitlines()
-    theChosenLine = random.choice(allLines)
-    return theChosenLine.split()
+    fullInfo = names.get_full_name().split()
+    fullInfo.append(fullInfo[0] + "." + fullInfo[1] + "@gmail.com")
+    phone_number = PhoneNumber("LT")
+    fullInfo.append(phone_number.get_mobile())
+    return fullInfo
 
 def maximizeWindowAndAcceptCookies():
     driver.maximize_window()
@@ -52,7 +56,7 @@ def fillFiltersAndSearch():
     driver.find_element(By.XPATH, vf.categoryDropBox).click()
     driver.find_element(By.XPATH, vf.selectingSales).click()
     driver.find_element(By.XPATH, vf.searchForJobs).click()
-    wait.until(lambda x: x.find_element(By.ID, "search-filter"))
+    wait.until(EC.visibility_of_element_located((By.ID, 'search-filter')))
 
 def selectAvailablePositions():
     driver.find_element(By.XPATH, vf.technologyAndEngineeringCheckBox).click()
@@ -95,19 +99,14 @@ def makeScreenShot():
 def submitForm():
     driver.find_element(By.ID, vf.submitFormButton).click()
 
+def exitChrome():
+    driver.quit()
 
 
 
 
 
-path = os.path.dirname(os.path.abspath(sys.argv[0]))
-driver = checkAndOpenDriver(path)
-driver.get("https://www.orioninc.com")
-actions = ActionChains(driver)
-wait = WebDriverWait(driver, timeout=30)
-driver.implicitly_wait(3)
-
-
+path, driver, actions, wait = onStartSettingUpChrome()
 maximizeWindowAndAcceptCookies()
 openCareersSection()
 fillFiltersAndSearch()
@@ -117,3 +116,4 @@ openFrame()
 fillInformationInForm()
 makeScreenShot()
 submitForm()
+exitChrome()
