@@ -1,11 +1,11 @@
-import Functions as fun
+import Functions as function
 
-fun.maximizeWindowAndAcceptCookies()
-fun.openCareersSection()
-fun.fillFiltersAndSearch()
-fun.selectAvailablePositions()
-fun.openFrame()
-fun.fillInformationInForm()
-fun.makeScreenShot()
-fun.submitForm()
-fun.exitChrome()
+function.maximizeWindowAndAcceptCookies()
+function.openCareersSection()
+function.fillFiltersAndSearch()
+function.selectAvailablePositions()
+function.openFrame()
+function.fillInformationInForm()
+function.makeScreenShot()
+function.submitForm()
+function.exitChrome()

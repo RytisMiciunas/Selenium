@@ -5,6 +5,7 @@ import random
 import time
 import variables as vf
 import names
+import URL
 
 from phone_gen import PhoneNumber
 from selenium.webdriver.support import expected_conditions as EC
@@ -15,14 +16,6 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from pynput.keyboard import Key, Controller
 
-def onStartSettingUpChrome():
-    path = os.path.dirname(os.path.abspath(sys.argv[0]))
-    driver = checkAndOpenDriver(path)
-    driver.get("https://www.orioninc.com")
-    actions = ActionChains(driver)
-    wait = WebDriverWait(driver, timeout=30)
-    driver.implicitly_wait(3)
-    return path, driver, actions, wait
 
 def checkAndOpenDriver(path):
     pathToDriver = path +r"\chromedriver.exe"
@@ -34,6 +27,17 @@ def checkAndOpenDriver(path):
     driver = webdriver.Chrome(service=Service_obj)
     return driver
 
+
+def onStartSettingUpChrome():
+    path = os.path.dirname(os.path.abspath(sys.argv[0]))
+    driver = checkAndOpenDriver(path)
+    driver.get(URL.URLLink)
+    actions = ActionChains(driver)
+    wait = WebDriverWait(driver, timeout=30)
+    driver.implicitly_wait(3)
+    return path, driver, actions, wait
+
+
 def getInformationLine():
     fullInfo = names.get_full_name().split()
     fullInfo.append(fullInfo[0] + "." + fullInfo[1] + "@gmail.com")
@@ -41,57 +45,60 @@ def getInformationLine():
     fullInfo.append(phone_number.get_mobile())
     return fullInfo
 
+
 def maximizeWindowAndAcceptCookies():
     driver.maximize_window()
-    driver.find_element(By.ID, vf.acceptCookie).click()
+    driver.find_element(By.ID, vf.acceptCookieButtonId).click()
+
 
 def openCareersSection():
-    careerButton = driver.find_element(By.LINK_TEXT, vf.careersButton)
+    careerButton = driver.find_element(By.LINK_TEXT, vf.careersLinkedText)
     wait.until(EC.element_to_be_clickable(careerButton))
     careerButton.click()
 
+
 def fillFiltersAndSearch():
-    driver.find_element(By.XPATH, vf.locationDrobBox).click()
-    driver.find_element(By.XPATH, vf.selectingVilnius).click()
-    driver.find_element(By.XPATH, vf.categoryDropBox).click()
-    driver.find_element(By.XPATH, vf.selectingSales).click()
-    driver.find_element(By.CLASS_NAME, vf.searchForJobs).click()
-    wait.until(EC.visibility_of_element_located((By.ID, vf.dropBoxForCategories)))
+    driver.find_element(By.XPATH, vf.locationDrobBoxXpath).click()
+    driver.find_element(By.XPATH, vf.selectingVilniusXpath).click()
+    driver.find_element(By.XPATH, vf.categoryDropBoxXpath).click()
+    driver.find_element(By.XPATH, vf.selectingSalesXpath).click()
+    driver.find_element(By.CLASS_NAME, vf.searchForJobsButtonId).click()
+    wait.until(EC.visibility_of_element_located((By.ID, vf.dropBoxForCategoriesId)))
 
 def selectAvailablePositions():
-    driver.find_element(By.XPATH, vf.technologyAndEngineeringCheckBox).click()
-    wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, vf.seniorTestAutomationEngineerPosition)))
-    driver.find_element(By.PARTIAL_LINK_TEXT, vf.seniorTestAutomationEngineerPosition).click()
+    driver.find_element(By.XPATH, vf.technologyAndEngineeringCheckBoxXpath).click()
+    wait.until(EC.element_to_be_clickable((By.PARTIAL_LINK_TEXT, vf.seniorTestAutomationEngineerPositionLinkedText)))
+    driver.find_element(By.PARTIAL_LINK_TEXT, vf.seniorTestAutomationEngineerPositionLinkedText).click()
 
 def openFrame():
     try:
-        wait.until(EC.frame_to_be_available_and_switch_to_it((By.ID, vf.frameName)))
+        wait.until(EC.frame_to_be_available_and_switch_to_it((By.ID, vf.frameNameId)))
     except:
         print("Couldn't switch to frame")
-    wait.until(EC.element_to_be_clickable((By.ID, vf.inputName)))
+    wait.until(EC.element_to_be_clickable((By.ID, vf.inputNameId)))
 
 def fillInformationInForm():
     inputInformation = getInformationLine()
-    driver.find_element(By.ID, vf.inputName).send_keys(inputInformation[0])
-    driver.find_element(By.ID, vf.inputLastName).send_keys(inputInformation[1])
-    driver.find_element(By.ID, vf.inputMail).send_keys(inputInformation[2])
-    driver.find_element(By.ID, vf.inputPhone).send_keys(inputInformation[3])
-    cvUpload = driver.find_element(By.XPATH, vf.uploadCv)
-    coverUpload = driver.find_element(By.XPATH, vf.uploadCoverLetter)
+    driver.find_element(By.ID, vf.inputNameId).send_keys(inputInformation[0])
+    driver.find_element(By.ID, vf.inputLastNameId).send_keys(inputInformation[1])
+    driver.find_element(By.ID, vf.inputMailId).send_keys(inputInformation[2])
+    driver.find_element(By.ID, vf.inputPhoneId).send_keys(inputInformation[3])
+    cvUpload = driver.find_element(By.XPATH, vf.uploadCvLinkedTextXpath)
+    coverUpload = driver.find_element(By.XPATH, vf.uploadCoverLetterLinkedTextXpath)
     cvUpload.click()
     
     uploadFileFromComputer("\CV.pdf")
     wait.until(EC.element_to_be_clickable(coverUpload))
     coverUpload.click()
     uploadFileFromComputer("\cover_letter.txt")
-    wait.until(EC.visibility_of_element_located((By.ID, vf.coverLetterUploadedImg)))
-    driver.find_element(By.ID, vf.agreeWithPolicy).click()
+    wait.until(EC.visibility_of_element_located((By.ID, vf.coverLetterUploadedImgId)))
+    driver.find_element(By.ID, vf.agreeWithPolicyCheckBoxId).click()
 
 def makeScreenShot():
     driver.get_screenshot_as_file("sc/screenshot.png")
 
 def submitForm():
-    driver.find_element(By.ID, vf.submitFormButton).click()
+    driver.find_element(By.ID, vf.submitFormButtonId).click()
 
 def exitChrome():
     driver.quit()
